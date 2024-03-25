@@ -25,4 +25,3 @@ Functionality includes:
 2. Can be used on Content and Media Doctypes.
 3. Tags saved to the default internal and external indexes in CSV format.
 4. Coming soon - ability for content editors to add to a Tag List, by enabling a Pre-Value switch.
-
