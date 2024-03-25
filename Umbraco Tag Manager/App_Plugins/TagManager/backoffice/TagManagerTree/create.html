@@ -1,0 +1,20 @@
+<div ng-controller="TagManager.CreateController">
+    <umb-editor-view>
+        <umb-dialog-body class="form-horizontal">
+            <umb-box>
+                <umb-box-content>
+                    <umb-control-group label="Tag Name">
+                        <input type="text" class="umb-textstring umb-property-editor" ng-model="cmsTags.tag" />
+                        <input type="hidden" ng-model="cmsTags.group" />
+                    </umb-control-group>
+                </umb-box-content>
+            </umb-box>
+        </umb-dialog-body>
+        <umb-editor-footer>
+            <umb-editor-footer-content-right>
+                <umb-button action="cancel(cmsTags)" type="link" button-style="link" label="Cancel"></umb-button>
+                <umb-button action="save(cmsTags)" type="button" button-style="success" label="Create"></umb-button>
+            </umb-editor-footer-content-right>
+        </umb-editor-footer>
+    </umb-editor-view>
+</div>

@@ -1,0 +1,16 @@
+{
+  "dashboards": [
+    {
+      "alias": "tagManager",
+      "view": "~/App_Plugins/TagManager/Dashboard.html",
+      "sections": [ "TagManager" ]
+    }
+  ],
+  "javascript": [
+    "~/App_Plugins/TagManager/backoffice/TagManagerTree/TagManager.controller.js",
+    "~/App_Plugins/TagManager/TagManager.resource.js"
+  ],
+  "css": [
+    "~/App_Plugins/TagManager/TagManager.css"
+  ]
+}

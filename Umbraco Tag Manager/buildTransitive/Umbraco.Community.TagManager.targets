@@ -1,0 +1,36 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TagListerContentFilesPath>$(MSBuildThisFileDirectory)..\App_Plugins\TagList\**\*.*</TagListerContentFilesPath>
+    <TagManagerContentFilesPath>$(MSBuildThisFileDirectory)..\App_Plugins\TagManager\**\*.*</TagManagerContentFilesPath>
+  </PropertyGroup>
+
+  <Target Name="CopyTagListerAssets" BeforeTargets="Build">
+    <ItemGroup>
+      <TagListerContentFiles Include="$(TagListerContentFilesPath)" />
+    </ItemGroup>
+    <Message Text="Copying Tag_Lister files: $(TagListerContentFilesPath) - #@(TagListerContentFiles->Count()) files" Importance="high" />
+    <Copy SourceFiles="@(TagListerContentFiles)" DestinationFiles="@(TagListerContentFiles->'$(MSBuildProjectDirectory)\App_Plugins\TagList\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="CopyTagManagerAssets" BeforeTargets="Build">
+    <ItemGroup>
+      <TagManagerContentFiles Include="$(TagManagerContentFilesPath)" />
+    </ItemGroup>
+    <Message Text="Copying TagManager files: $(TagManagerContentFilesPath) - #@(TagManagerContentFiles->Count()) files" Importance="high" />
+    <Copy SourceFiles="@(TagManagerContentFiles)" DestinationFiles="@(TagManagerContentFiles->'$(MSBuildProjectDirectory)\App_Plugins\TagManager\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="ClearTagListerAssets" BeforeTargets="Clean">
+    <ItemGroup>
+      <TagListerDir Include="$(MSBuildProjectDirectory)\App_Plugins\TagList\" />
+    </ItemGroup>
+    <Message Text="Clear old Tag_Lister data" Importance="high" />
+    <RemoveDir Directories="@(TagListerDir)" />
+  </Target>
+  <Target Name="ClearTagManagerAssets" BeforeTargets="Clean">
+    <ItemGroup>
+      <TagManagerDir Include="$(MSBuildProjectDirectory)\App_Plugins\TagManager\" />
+    </ItemGroup>
+    <Message Text="Clear old TagManaga data" Importance="high" />
+    <RemoveDir Directories="@(TagManagerDir)" />
+  </Target>
+</Project>

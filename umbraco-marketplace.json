@@ -1,0 +1,14 @@
+{
+  "$schema": "https://marketplace.umbraco.com/umbraco-marketplace-schema.json",
+  "AuthorDetails": {
+    "Name": "Martin Griffiths",
+    "Description": "Senior software developer at Lane, Clark & Peacock LLP",
+    "Url": "https://our.umbraco.com/members/drummerboy46/",
+    "ImageUrl": "https://our.umbraco.com/media/upload/c2471e45-e9df-41fc-b9c1-cfb0ed929f63/lcp-logo-110.png?width=100&height=100&mode=crop&upscale=true"
+
+  },
+  "Description": "Tag utilities for Umbraco 13",
+  "LicenseTypes": [ "Free" ],
+  "PackageType": "Package"
+
+}
