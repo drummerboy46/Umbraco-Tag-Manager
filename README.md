@@ -1,4 +1,4 @@
-# Umbraco.Community.TagManager
+# Our.Umbraco.Community.TagManager
 
 Useful Tag utilities for Umbraco 13. 
 
