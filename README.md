@@ -6,7 +6,7 @@ Initially based on code from https://github.com/usome/UmbracoTagManager and http
 
 This package installs a custom section within the administration area and a new DataType.
 
-## TagManager
+## Tag Manager
 Creates a tree view of all Tags that have been created by the Umbraco Tag Datatype or assigned by Tag List Property Editor. 
 
 The tree is split into separate branches for each tag Group created - useful if you run multiple blogs on your site, or have multiple Tag Groups defined in a site.
