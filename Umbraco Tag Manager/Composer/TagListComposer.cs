@@ -20,23 +20,22 @@ public class TagListComposer : IComposer
 {
     public void Compose(IUmbracoBuilder builder)
     {
-        builder.AddNotificationHandler<ContentSavingNotification, UpdateContentTagsForIndex>();
-        builder.AddNotificationHandler<MediaSavingNotification, UpdateMediaTagsForRelations>();
+        builder.AddNotificationHandler<ContentSavingNotification, UpdateContentTagsForRelationsAndIndex>();
+        builder.AddNotificationHandler<MediaSavingNotification, UpdateMediaTagsForRelationsAndIndex>();
         builder.Services.AddScoped<ITagListRepository, TagListRepository>();
     }
 }
-
-public class UpdateMediaTagsForRelations(
-    IDataTypeService dataTypeService,
+public class UpdateContentTagsForRelationsAndIndex(IDataTypeService dataTypeService,
     ITagRepository tagRepository,
-    IExamineManager examineManager) : INotificationHandler<MediaSavingNotification>
+    IExamineManager examineManager) : INotificationHandler<ContentSavingNotification>
 {
-    public void Handle(MediaSavingNotification notification)
+    public void Handle(ContentSavingNotification notification)
     {
-        if (!notification.SavedEntities.Any(media =>
-                media.Properties.Any(prop => prop.PropertyType.PropertyEditorAlias == "TagList"))) return;
+        // return if there's no TagList properties in this content
+        if (!notification.SavedEntities.Any(content => content.Properties.Any(prop => prop.PropertyType.PropertyEditorAlias == "TagList"))) return;
 
-        foreach (IMedia item in notification.SavedEntities)
+        // iterate through the content
+        foreach (IContent item in notification.SavedEntities)
         {
             // get all properties using TagList Property Editor
             IEnumerable<IProperty> properties = item.Properties
@@ -92,6 +91,7 @@ public class UpdateMediaTagsForRelations(
             }
         }
     }
+
     private void AddData(object sender, IndexingItemEventArgs e, string key, string value)
     {
         Dictionary<string, List<object>> updatedValues = e.ValueSet.Values.ToDictionary(x => x.Key, x => x.Value.ToList());
@@ -99,18 +99,17 @@ public class UpdateMediaTagsForRelations(
         e.SetValues(updatedValues.ToDictionary(x => x.Key, x => (IEnumerable<object>)x.Value));
     }
 }
-
-public class UpdateContentTagsForIndex(IDataTypeService dataTypeService, 
-    ITagRepository tagRepository, 
-    IExamineManager examineManager) : INotificationHandler<ContentSavingNotification>
+public class UpdateMediaTagsForRelationsAndIndex(
+    IDataTypeService dataTypeService,
+    ITagRepository tagRepository,
+    IExamineManager examineManager) : INotificationHandler<MediaSavingNotification>
 {
-    public void Handle(ContentSavingNotification notification)
+    public void Handle(MediaSavingNotification notification)
     {
-        // return if there's no TagList properties in this content
-        if (!notification.SavedEntities.Any(content => content.Properties.Any(prop => prop.PropertyType.PropertyEditorAlias == "TagList"))) return;
+        if (!notification.SavedEntities.Any(media =>
+                media.Properties.Any(prop => prop.PropertyType.PropertyEditorAlias == "TagList"))) return;
 
-        // iterate through the content
-        foreach (IContent item in notification.SavedEntities)
+        foreach (IMedia item in notification.SavedEntities)
         {
             // get all properties using TagList Property Editor
             IEnumerable<IProperty> properties = item.Properties

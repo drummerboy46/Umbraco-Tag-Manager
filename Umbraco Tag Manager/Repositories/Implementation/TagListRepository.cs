@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
 using NPoco;
+using Our.Umbraco.Community.TagManager.Models;
 using Umbraco.Cms.Infrastructure.Scoping;
 
 namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
@@ -17,11 +18,8 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             {
                 using (var scope = scopeProvider.CreateScope())
                 {
-                    //Simple SQL query to return all tags by group from the cmstags table.
-                    var query = new Sql().Select(
-                        $"tag AS text FROM cmsTags WHERE [group] = '{group}'");
-
-                    tags = scope.Database.Fetch<string>(query).ToArray();
+                    string sql = "SELECT tag AS text FROM cmsTags WHERE [group] = @0";
+                    tags = scope.Database.Fetch<string>(sql, group).ToArray();
 
                     scope.Complete();
                 }
