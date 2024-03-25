@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>13.0.0</Version>
+    <Version>13.0.1</Version>
     <ContentTargetFolders>.</ContentTargetFolders>
     <Product>Our.Umbraco.Community.TagManager</Product>
     <PackageId>Our.Umbraco.Community.TagManager</PackageId>
@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/drummerboy46/Umbraco-Tag-Manager</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageTags>umbraco;marketplace;umbraco;plugin;package;DXP;tag</PackageTags>
+    <PackageTags>umbraco-marketplace;umbraco;plugin;package;DXP;tag</PackageTags>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <ImplicitUsings>disable</ImplicitUsings>
     <PackageIcon>tagmanager.jpeg</PackageIcon>
