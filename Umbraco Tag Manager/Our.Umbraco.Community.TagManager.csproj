@@ -16,6 +16,7 @@
     <PackageTags>umbraco;marketplace;umbraco;plugin;package;DXP;tag</PackageTags>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <ImplicitUsings>disable</ImplicitUsings>
+    <PackageIcon>tagmanager.jpeg</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -55,5 +56,12 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>Always</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="tagmanager.jpeg">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 </Project>
