@@ -2,7 +2,7 @@
 
 Useful Tag utilities for Umbraco 13. 
 
-Based on code from https://github.com/usome/UmbracoTagManager and https://github.com/huwred/Tag-Lister but has been entirely re-written using the Repository Pattern and Umbraco 13 UI.
+Initially based on code from https://github.com/usome/UmbracoTagManager and https://github.com/huwred/Tag-Lister and has been mostly re-written using repositories and better Umbraco 13 UI.
 
 This package installs a custom section within the administration area and a new DataType.
 
