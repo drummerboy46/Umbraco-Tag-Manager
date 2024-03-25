@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using NPoco;
 using Umbraco.Cms.Infrastructure.Scoping;
 
-namespace Umbraco.Community.TagManager.Repositories.Implementation
+namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
 {
     internal class TagListRepository(ILogger<TagManagerRepository> logger, IScopeProvider scopeProvider)
         : ITagListRepository

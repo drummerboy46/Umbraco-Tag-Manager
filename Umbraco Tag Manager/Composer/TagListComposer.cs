@@ -3,6 +3,8 @@ using System.Linq;
 using Examine;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Our.Umbraco.Community.TagManager.Repositories;
+using Our.Umbraco.Community.TagManager.Repositories.Implementation;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Events;
@@ -10,11 +12,9 @@ using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Notifications;
 using Umbraco.Cms.Core.Persistence.Repositories;
 using Umbraco.Cms.Core.Services;
-using Umbraco.Community.TagManager.Repositories;
-using Umbraco.Community.TagManager.Repositories.Implementation;
 using static Umbraco.Cms.Core.Constants;
 
-namespace Umbraco.Community.TagManager.Composer;
+namespace Our.Umbraco.Community.TagManager.Composer;
 
 public class TagListComposer : IComposer
 {

@@ -1,8 +1,7 @@
-﻿using NPoco;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Collections.Generic;
 
-namespace Umbraco.Community.TagManager.Models
+namespace Our.Umbraco.Community.TagManager.Models
 {
     [DataContract(Name = "tagItem", Namespace = "")]
     public class TagItem

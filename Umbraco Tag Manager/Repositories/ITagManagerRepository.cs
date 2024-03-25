@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Umbraco.Community.TagManager.Models;
+using Our.Umbraco.Community.TagManager.Models;
 
-namespace Umbraco.Community.TagManager.Repositories
+namespace Our.Umbraco.Community.TagManager.Repositories
 {
     public interface ITagManagerRepository
     {

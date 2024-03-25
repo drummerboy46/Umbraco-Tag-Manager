@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Our.Umbraco.Community.TagManager.Models;
+using Our.Umbraco.Community.TagManager.Repositories;
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Events;
 using Umbraco.Cms.Core.Models.Trees;
@@ -9,12 +11,9 @@ using Umbraco.Cms.Core.Trees;
 using Umbraco.Cms.Web.BackOffice.Trees;
 using Umbraco.Cms.Web.Common.Attributes;
 using Umbraco.Extensions;
-using Umbraco.Community.TagManager.Repositories;
 using Constants = Umbraco.Cms.Core.Constants;
-using Umbraco.Community.TagManager.Models;
-using Umbraco.Cms.Core.Actions;
 
-namespace Umbraco.Community.TagManager.Controllers
+namespace Our.Umbraco.Community.TagManager.Controllers
 {
     [PluginController(StringConstants.PluginAlias)]
     [Tree(StringConstants.SectionAlias, StringConstants.TreeAlias, TreeGroup = StringConstants.TreeGroup)]

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Umbraco.Community.TagManager.Models
+namespace Our.Umbraco.Community.TagManager.Models
 {
     [DataContract(Name = "taggedMedia", Namespace = "")]
     public class TaggedMedia

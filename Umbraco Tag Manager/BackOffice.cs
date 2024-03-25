@@ -1,6 +1,6 @@
 ﻿using Umbraco.Cms.Core.Sections;
 
-namespace Umbraco.Community.TagManager
+namespace Our.Umbraco.Community.TagManager
 {
 	public class TagManagerSection : ISection
 	{

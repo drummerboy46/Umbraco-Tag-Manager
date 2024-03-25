@@ -1,15 +1,15 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Linq;
-using Umbraco.Cms.Infrastructure.Scoping;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using NUglify.Helpers;
+using Our.Umbraco.Community.TagManager.Models;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Services;
-using Umbraco.Community.TagManager.Models;
+using Umbraco.Cms.Infrastructure.Scoping;
 
-namespace Umbraco.Community.TagManager.Repositories.Implementation
+namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
 {
     internal class TagManagerRepository(IScopeProvider scopeProvider, IContentService contentService,
         IMediaService mediaService, ITagService tagService, ILogger<TagManagerRepository> logger) : ITagManagerRepository

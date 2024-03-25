@@ -1,7 +1,7 @@
 ﻿using System;
 using Umbraco.Cms.Core.Packaging;
 
-namespace Umbraco.Community.TagManager.Migrations
+namespace Our.Umbraco.Community.TagManager.Migrations
 {
     public class MediaWizPackageMigrationPlan() : PackageMigrationPlan("Umbraco TagManager")
     {

@@ -1,4 +1,4 @@
-﻿namespace Umbraco.Community.TagManager
+﻿namespace Our.Umbraco.Community.TagManager
 {
 	public class StringConstants
 	{

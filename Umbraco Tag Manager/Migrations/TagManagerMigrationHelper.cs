@@ -7,7 +7,7 @@ using Umbraco.Cms.Core.Strings;
 using Umbraco.Cms.Infrastructure.Migrations;
 using Umbraco.Cms.Infrastructure.Packaging;
 
-namespace Umbraco.Community.TagManager.Migrations
+namespace Our.Umbraco.Community.TagManager.Migrations
 {
     public class TagManagerMigrationHelper(
         IPackagingService packagingService,

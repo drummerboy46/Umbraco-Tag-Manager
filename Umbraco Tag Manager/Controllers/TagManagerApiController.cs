@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using Our.Umbraco.Community.TagManager.Models;
+using Our.Umbraco.Community.TagManager.Repositories;
 using Umbraco.Cms.Web.BackOffice.Controllers;
 using Umbraco.Cms.Web.Common.Attributes;
-using Umbraco.Community.TagManager.Models;
-using Umbraco.Community.TagManager.Repositories;
 
-namespace Umbraco.Community.TagManager.Controllers
+namespace Our.Umbraco.Community.TagManager.Controllers
 {
     [PluginController(StringConstants.PluginAlias)]
     public class TagManagerApiController(ITagManagerRepository tagManagerRepository) : UmbracoAuthorizedJsonController

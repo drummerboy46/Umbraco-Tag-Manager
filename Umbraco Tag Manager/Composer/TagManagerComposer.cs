@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Our.Umbraco.Community.TagManager.Repositories;
+using Our.Umbraco.Community.TagManager.Repositories.Implementation;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
-using Umbraco.Community.TagManager.Repositories;
-using Umbraco.Community.TagManager.Repositories.Implementation;
 
-namespace Umbraco.Community.TagManager.Composer;
+namespace Our.Umbraco.Community.TagManager.Composer;
 
 public class TagManagerComposer : IComposer
 {

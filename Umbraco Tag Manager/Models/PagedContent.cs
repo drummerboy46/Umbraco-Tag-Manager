@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Umbraco.Community.TagManager.Models
+namespace Our.Umbraco.Community.TagManager.Models
 {
     [DataContract(Name = "pagedContent", Namespace = "")]
     public class PagedContent
