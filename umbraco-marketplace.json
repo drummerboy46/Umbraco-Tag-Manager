@@ -4,7 +4,7 @@
   "AuthorDetails": {
     "Name": "Martin Griffiths",
     "Url": "https://our.umbraco.com/members/drummerboy46/",
-    "ImageUrl": "https://our.umbraco.com/media/upload/c2471e45-e9df-41fc-b9c1-cfb0ed929f63/lcp-logo-110.png?width=100&height=100&mode=crop&upscale=true",
+    "ImageUrl": "https://our.umbraco.com/media/upload/ab550ccd-74ed-4d2b-85c8-f6e89e1c7bb7/19264403_10156315462797166_5183010119862590314_o.jpg?width=100&height=100&mode=crop&upscale=true",
     "Contributors": [
       {
         "Name": "Usome",
@@ -33,16 +33,16 @@
   ],
   "Screenshots": [
     {
-      "ImageUrl": "https://raw.githubusercontent.com/BishalTimalsina12/Images/main/Screenshot%202024-01-09%20001957.png",
+      "ImageUrl": "https://github.com/drummerboy46/Umbraco-Tag-Manager/blob/master/dashboard.png?raw=true",
       "Caption": "Dashboard"
     },
     {
-      "ImageUrl": "https://raw.githubusercontent.com/BishalTimalsina12/Images/main/Screenshot%202024-01-09%20002044.png",
-      "Caption": "Overview"
+      "ImageUrl": "https://github.com/drummerboy46/Umbraco-Tag-Manager/blob/master/group.png?raw=true",
+      "Caption": "Group View"
     },
     {
-      "ImageUrl": "https://raw.githubusercontent.com/BishalTimalsina12/Images/main/Screenshot%202024-01-09%20002225.png",
-      "Caption": "Detailed View"
+      "ImageUrl": "https://github.com/drummerboy46/Umbraco-Tag-Manager/blob/master/detail.png?raw=true",
+      "Caption": "Detail View"
     }
   ]
 }
