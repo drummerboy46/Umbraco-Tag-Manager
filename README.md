@@ -1,6 +1,6 @@
 # Our.Umbraco.Community.TagManager
 
-Useful Tag utilities for Umbraco 13. 
+Useful Tag utilities for Umbraco 13. TAG ALL THE THINGS!!!
 
 Initially based on code from https://github.com/usome/UmbracoTagManager and https://github.com/huwred/Tag-Lister and has been mostly re-written using repositories and better Umbraco 13 UI.
 
