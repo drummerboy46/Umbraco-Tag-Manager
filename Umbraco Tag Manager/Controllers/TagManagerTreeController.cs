@@ -63,6 +63,8 @@ namespace Our.Umbraco.Community.TagManager.Controllers
 
             bool idIsInteger = int.TryParse(id, out var idInt);
 
+            menu.Items.Clear();
+
             // Add root menu item
             if (id == Constants.System.Root.ToInvariantString())
             {

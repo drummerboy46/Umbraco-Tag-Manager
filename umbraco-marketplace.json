@@ -1,14 +1,48 @@
 {
   "$schema": "https://marketplace.umbraco.com/umbraco-marketplace-schema.json",
+  "AddOnPackagesRequiredForUmbracoCloud": [],
   "AuthorDetails": {
     "Name": "Martin Griffiths",
-    "Description": "Senior software developer at Lane, Clark & Peacock LLP",
     "Url": "https://our.umbraco.com/members/drummerboy46/",
-    "ImageUrl": "https://our.umbraco.com/media/upload/c2471e45-e9df-41fc-b9c1-cfb0ed929f63/lcp-logo-110.png?width=100&height=100&mode=crop&upscale=true"
-
+    "ImageUrl": "https://our.umbraco.com/media/upload/c2471e45-e9df-41fc-b9c1-cfb0ed929f63/lcp-logo-110.png?width=100&height=100&mode=crop&upscale=true",
+    "Contributors": [
+      {
+        "Name": "Usome",
+        "Url": "https://our.umbraco.com/members/id:277065/"
+      },
+      {
+        "Name": "Bishal Tim",
+        "Url": "https://our.umbraco.com/members/id:339532/"
+      }
+    ],
+    "SyncContributorsFromRepository": false
   },
-  "Description": "Tag utilities for Umbraco 13",
+  "Category": "Editor Tools",
+  "IsSubPackageOf": "",
+  "PackageType": "Package",
+  "PackagesByAuthor": [],
+  "RelatedPackages": [],
   "LicenseTypes": [ "Free" ],
-  "PackageType": "Package"
-
+  "Tags": [ "umbraco", "plugin", "package", "umbraco-marketplace" ],
+  "Title": "Our.Umbraco.Community.TagManager",
+  "VersionSpecificPackageIds": [
+    {
+      "UmbracoMajorVersion": 13,
+      "PackageId": "Our.Umbraco.Community.TagManager"
+    }
+  ],
+  "Screenshots": [
+    {
+      "ImageUrl": "https://raw.githubusercontent.com/BishalTimalsina12/Images/main/Screenshot%202024-01-09%20001957.png",
+      "Caption": "Dashboard"
+    },
+    {
+      "ImageUrl": "https://raw.githubusercontent.com/BishalTimalsina12/Images/main/Screenshot%202024-01-09%20002044.png",
+      "Caption": "Overview"
+    },
+    {
+      "ImageUrl": "https://raw.githubusercontent.com/BishalTimalsina12/Images/main/Screenshot%202024-01-09%20002225.png",
+      "Caption": "Detailed View"
+    }
+  ]
 }
