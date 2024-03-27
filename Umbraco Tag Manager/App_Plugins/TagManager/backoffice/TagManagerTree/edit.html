@@ -1,6 +1,5 @@
-﻿<div>
-    <ng-form val-form-manager ng-controller="TagManager.EditController as vm">
-
+﻿<div class="form-horizontal">
+    <ng-form val-form-manager ng-controller="tagManager.edit.controller as vm">
         <umb-editor-view>
             <umb-editor-header name="cmsTags.tagItem.tag"
                                hide-icon="true"
@@ -10,8 +9,7 @@
 
             <umb-editor-container>
                 <umb-editor-tab-bar>
-                    <umb-tabs-nav tabs="vm.tabs"
-                                  on-tab-change="vm.changeTab(tab)">
+                    <umb-tabs-nav tabs="vm.tabs" on-tab-change="vm.changeTab(tab)">
                     </umb-tabs-nav>
                 </umb-editor-tab-bar>
 
@@ -21,98 +19,92 @@
                     <div ng-if="tab.alias === 'mergeTab'">
                         <umb-box>
                             <umb-box-content>
-                                <p><small>Note: A tag merged with this tag will inherit content & media relationships assigned to this tag.</small></p>
-                                <umb-control-group description="Select a tag to merge into this tag (this tag will remain)">
-                                    <select ng-model="tag" ng-options="tag.tag for tag in cmsTags.lisItems track by tag.id" ng-change="change(tag)" name="dropdownList">
-                                        <option value="">Select item to merge</option>
-                                    </select>
-                                </umb-control-group>
+                                <div ng-if="cmsTags.mergeList.length === 0">no tags to merge</div>
+                                <umb-property property="cmsTags" ng-if="cmsTags.mergeList.length > 0">
+                                    <umb-property-editor model="cmsTags"></umb-property-editor>
+                                </umb-property>
                             </umb-box-content>
                         </umb-box>
                     </div>
                     <div ng-if="tab.alias === 'contentTab'">
                         <umb-box>
                             <umb-box-content>
-                                <umb-control-group>
-                                    <div ng-if="!vm.loading && vm.recordsContent.length > 0">
-                                        <umb-editor-sub-header>
-                                            <umb-editor-sub-header-content-left></umb-editor-sub-header-content-left>
-                                            <umb-editor-sub-header-content-right>
-                                                <umb-search-filter text="Type to filter..." model="vm.filter.searchTermContent"></umb-search-filter>
-                                            </umb-editor-sub-header-content-right>
-                                        </umb-editor-sub-header>
-                                        <div class="umb-table" ng-show="!vm.loading && vm.recordsContent.length > 0">
-                                            <div class="umb-table-head">
-                                                <div class="umb-table-row">
-                                                    <!-- We leave this first on empty in the header & show icons in the body -->
-                                                    <div class="umb-table-cell"></div>
-                                                    <div class="umb-table-cell umb-table__name">Name</div>
-                                                </div>
-                                            </div>
-                                            <div class="umb-table-body">
-                                                <div class="umb-table-row" ng-repeat="content in vm.recordsContent | filter: { 'name': vm.filter.searchTermContent }">
-                                                    <div class="umb-table-cell">
-                                                        <i class="umb-table-body__icon umb-table-body__fileicon icon-document"></i>
-                                                    </div>
-                                                    <div class="umb-table-cell umb-table__name"><a href="{{content.url}}">{{content.name}}</a></div>
-                                                </div>
+                                <div ng-if="!vm.loading && vm.recordsContent.length > 0">
+                                    <umb-editor-sub-header>
+                                        <umb-editor-sub-header-content-left></umb-editor-sub-header-content-left>
+                                        <umb-editor-sub-header-content-right>
+                                            <umb-search-filter text="Type to filter..." model="vm.filter.searchTermContent"></umb-search-filter>
+                                        </umb-editor-sub-header-content-right>
+                                    </umb-editor-sub-header>
+                                    <div class="umb-table" ng-show="!vm.loading && vm.recordsContent.length > 0">
+                                        <div class="umb-table-head">
+                                            <div class="umb-table-row">
+                                                <!-- We leave this first on empty in the header & show icons in the body -->
+                                                <div class="umb-table-cell"></div>
+                                                <div class="umb-table-cell umb-table__name">Name</div>
                                             </div>
                                         </div>
-                                        <div class="flex justify-center" ng-show="!vm.loading && vm.recordsContent.length > 0">
-                                            <umb-pagination page-number="vm.paginationContent.pageNumber"
-                                                            total-pages="vm.paginationContent.totalPages"
-                                                            on-next="vm.nextPageContent"
-                                                            on-prev="vm.prevPageContent"
-                                                            on-change="vm.changePageContent"
-                                                            on-go-to-page="vm.goToPageContent">
-                                            </umb-pagination>
+                                        <div class="umb-table-body">
+                                            <div class="umb-table-row" ng-repeat="content in vm.recordsContent | filter: { 'name': vm.filter.searchTermContent }">
+                                                <div class="umb-table-cell">
+                                                    <i class="umb-table-body__icon umb-table-body__fileicon icon-document"></i>
+                                                </div>
+                                                <div class="umb-table-cell umb-table__name"><a href="{{content.url}}">{{content.name}}</a></div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div ng-if="vm.recordsContent.length === 0">No tagged content</div>
-                                </umb-control-group>
+                                    <div class="flex justify-center" ng-if="!vm.loading && vm.recordsContent.length > 0">
+                                        <umb-pagination page-number="vm.paginationContent.pageNumber"
+                                                        total-pages="vm.paginationContent.totalPages"
+                                                        on-next="vm.nextPageContent"
+                                                        on-prev="vm.prevPageContent"
+                                                        on-change="vm.changePageContent"
+                                                        on-go-to-page="vm.goToPageContent">
+                                        </umb-pagination>
+                                    </div>
+                                </div>
+                                <div ng-if="vm.recordsContent.length === 0">No tagged content</div>
                             </umb-box-content>
                         </umb-box>
                     </div>
                     <div ng-if="tab.alias === 'mediaTab'">
                         <umb-box>
                             <umb-box-content>
-                                <umb-control-group>
-                                    <div ng-if="!vm.loading && vm.recordsMedia.length > 0">
-                                        <umb-editor-sub-header>
-                                            <umb-editor-sub-header-content-left></umb-editor-sub-header-content-left>
-                                            <umb-editor-sub-header-content-right>
-                                                <umb-search-filter text="Type to filter..." model="vm.filter.searchTermMedia"></umb-search-filter>
-                                            </umb-editor-sub-header-content-right>
-                                        </umb-editor-sub-header>
-                                        <div class="umb-table" ng-show="!vm.loading && vm.recordsMedia.length > 0">
-                                            <div class="umb-table-head">
-                                                <div class="umb-table-row">
-                                                    <!-- We leave this first on empty in the header & show icons in the body -->
-                                                    <div class="umb-table-cell"></div>
-                                                    <div class="umb-table-cell umb-table__name">Name</div>
-                                                </div>
-                                            </div>
-                                            <div class="umb-table-body">
-                                                <div class="umb-table-row" ng-repeat="media in vm.recordsMedia | filter: { 'name': vm.filter.searchTermMedia }">
-                                                    <div class="umb-table-cell">
-                                                        <i class="umb-table-body__icon umb-table-body__fileicon icon-document"></i>
-                                                    </div>
-                                                    <div class="umb-table-cell umb-table__name"><a href="{{media.url}}">{{media.name}}</a></div>
-                                                </div>
+                                <div ng-if="!vm.loading && vm.recordsMedia.length > 0">
+                                    <umb-editor-sub-header>
+                                        <umb-editor-sub-header-content-left></umb-editor-sub-header-content-left>
+                                        <umb-editor-sub-header-content-right>
+                                            <umb-search-filter text="Type to filter..." model="vm.filter.searchTermMedia"></umb-search-filter>
+                                        </umb-editor-sub-header-content-right>
+                                    </umb-editor-sub-header>
+                                    <div class="umb-table" ng-show="!vm.loading && vm.recordsMedia.length > 0">
+                                        <div class="umb-table-head">
+                                            <div class="umb-table-row">
+                                                <!-- We leave this first on empty in the header & show icons in the body -->
+                                                <div class="umb-table-cell"></div>
+                                                <div class="umb-table-cell umb-table__name">Name</div>
                                             </div>
                                         </div>
-                                        <div class="flex justify-center" ng-show="!vm.loading && vm.recordsMedia.length > 0">
-                                            <umb-pagination page-number="vm.paginationMedia.pageNumber"
-                                                            total-pages="vm.paginationMedia.totalPages"
-                                                            on-next="vm.nextPageMedia"
-                                                            on-prev="vm.prevPageMedia"
-                                                            on-change="vm.changePageMedia"
-                                                            on-go-to-page="vm.goToPageMedia">
-                                            </umb-pagination>
+                                        <div class="umb-table-body">
+                                            <div class="umb-table-row" ng-repeat="media in vm.recordsMedia | filter: { 'name': vm.filter.searchTermMedia }">
+                                                <div class="umb-table-cell">
+                                                    <i class="umb-table-body__icon umb-table-body__fileicon icon-document"></i>
+                                                </div>
+                                                <div class="umb-table-cell umb-table__name"><a href="{{media.url}}">{{media.name}}</a></div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div ng-if="vm.recordsMedia.length === 0">No tagged media</div>
-                                </umb-control-group>
+                                    <div class="flex justify-center" ng-if="!vm.loading && vm.recordsMedia.length > 0">
+                                        <umb-pagination page-number="vm.paginationMedia.pageNumber"
+                                                        total-pages="vm.paginationMedia.totalPages"
+                                                        on-next="vm.nextPageMedia"
+                                                        on-prev="vm.prevPageMedia"
+                                                        on-change="vm.changePageMedia"
+                                                        on-go-to-page="vm.goToPageMedia">
+                                        </umb-pagination>
+                                    </div>
+                                </div>
+                                <div ng-if="vm.recordsMedia.length === 0">No tagged media</div>
                             </umb-box-content>
                         </umb-box>
                     </div>

@@ -1,0 +1,16 @@
+﻿<div ng-controller="tagManager.dropdownFlexible.controller">
+
+    <ng-form name="dropDownListForm">
+
+        <select name="dropDownList"
+                class="umb-property-editor umb-dropdown"
+                ng-change="change(tag)"
+                ng-model="tag" 
+                ng-options="tag.tag for tag in model.mergeList track by tag.id"
+                ng-required="false"
+                ng-disabled="readonly">
+            <option value="">Select a tag to merge with this tag</option>
+        </select>
+
+    </ng-form>
+</div>

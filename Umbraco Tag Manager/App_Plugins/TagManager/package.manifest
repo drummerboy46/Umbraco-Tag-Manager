@@ -2,15 +2,20 @@
   "dashboards": [
     {
       "alias": "tagManager",
-      "view": "~/App_Plugins/TagManager/Dashboard.html",
+      "view": "~/App_Plugins/tagManager/backoffice/dashboards/dashboard.html",
       "sections": [ "TagManager" ]
     }
   ],
   "javascript": [
-    "~/App_Plugins/TagManager/backoffice/TagManagerTree/TagManager.controller.js",
-    "~/App_Plugins/TagManager/TagManager.resource.js"
+    "~/App_Plugins/tagManager/backoffice/scripts/tagManager.create.controller.js",
+    "~/App_Plugins/tagManager/backoffice/scripts/tagManager.createGroup.controller.js",
+    "~/App_Plugins/tagManager/backoffice/scripts/tagManager.delete.controller.js",
+    "~/App_Plugins/tagManager/backoffice/scripts/tagManager.edit.controller.js",
+    "~/App_Plugins/tagManager/backoffice/scripts/tagManager.group.controller.js",
+    "~/App_Plugins/tagManager/backoffice/scripts/tagManager.dropdownFlexible.controller.js",
+    "~/App_Plugins/tagManager/backoffice/scripts/tagManager.resource.js"
   ],
   "css": [
-    "~/App_Plugins/TagManager/TagManager.css"
+    "~/App_Plugins/tagManager/backoffice/css/tagManager.css"
   ]
 }

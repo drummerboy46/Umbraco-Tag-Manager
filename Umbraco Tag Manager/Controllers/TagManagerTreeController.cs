@@ -29,72 +29,78 @@ namespace Our.Umbraco.Community.TagManager.Controllers
 
         protected override ActionResult<TreeNodeCollection> GetTreeNodes(string id, FormCollection queryStrings)
         {
+            var nodes = new TreeNodeCollection();
+
             if (id == Constants.System.Root.ToInvariantString())
             {
-                //top level nodes - generate list of tag groups that this user has access to.       
-                var tree = new TreeNodeCollection();
+                //top level nodes - generate list of tag groups.       
                 foreach (var tagGroup in tagManagerRepository.GetTagGroups())
                 {
                     var item = CreateTreeNode("tagGroup-" + tagGroup.Group, id, null, tagGroup.Group, "icon-tags", true, queryStrings.GetValue<string>("application"));
                     item.RoutePath = $"{StringConstants.SectionAlias}/{StringConstants.TreeAlias}/{StringConstants.DetailAction}/{tagGroup.Group}";
-                    tree.Add(item);
+                    nodes.Add(item);
                 }
-
-                return tree;
             }
             else
             {
-                //List all tags under group
                 var group = id.Substring(id.IndexOf('-') + 1);
-                var tree = new TreeNodeCollection();
                 TagList cmsTags = tagManagerRepository.GetTagsByGroup(group);
 
+                //List all tags under group
                 foreach (var tag in cmsTags.TagsInGroup)
                 {
                     var item = CreateTreeNode(tag.Id.ToString(), group, queryStrings, $"{tag.Tag}", "icon-tag", false);
-                    tree.Add(item);
+                    nodes.Add(item);
                 }
-
-                return tree;
             }
+
+            return nodes;
         }
 
         protected override ActionResult<MenuItemCollection> GetMenuForNode(string id, FormCollection queryStrings)
         {
             var menu = _menuItemCollectionFactory.Create();
-            menu.Items.Clear();
 
             bool idIsInteger = int.TryParse(id, out var idInt);
 
+            // Add root menu item
+            if (id == Constants.System.Root.ToInvariantString())
+            {
+                menu.Items.Add(new MenuItem("create-group", "Create Tag Group")
+                {
+                    Icon = "icon-add",
+                    OpensDialog = true,
+                    SeparatorBefore = true,
+                    UseLegacyIcon = false
+                });
+            }
+
+            // Add tag group menu items
+            if (id.Contains("tagGroup-"))
+            {
+                menu.Items.Add(new MenuItem("create", "Create Tag")
+                {
+                    Icon = "icon-add", // Set the icon to "add"
+                    OpensDialog = true,
+                    SeparatorBefore = true, // Add a separator before this menu item
+                    UseLegacyIcon = false
+                });
+                menu.Items.Add(new RefreshNode(LocalizedTextService, false));
+            }
+
+            // Add children menu items
             if (idIsInteger)
             {
                 if (idInt > 0)
                 {
                     menu.Items.Add(new MenuItem("delete", "Delete Tag")
                     {
-                        Icon = "delete",
+                        Icon = "icon-delete",
+                        OpensDialog = true,
                         SeparatorBefore = true,
+                        UseLegacyIcon = false,
                     });
                 }
-                else
-                {
-                    menu.Items.Add(new MenuItem("create-group", "Create Tag Group")
-                    {
-                        Icon = "add",
-                        SeparatorBefore = true,
-                    });
-                }
-            }
-
-            if (id.Contains("tagGroup-"))
-            {
-                // If the node is a tag group, add the "Create" option
-                menu.Items.Add(new MenuItem("create", "Create Tag")
-                {
-                    Icon = "add", // Set the icon to "add"
-                    SeparatorBefore = true, // Add a separator before this menu item
-                });
-                menu.Items.Add(new RefreshNode(LocalizedTextService, false));
             }
 
             return menu;

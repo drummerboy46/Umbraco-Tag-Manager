@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>13.0.1</Version>
+    <Version>13.0.3</Version>
     <ContentTargetFolders>.</ContentTargetFolders>
     <Product>Our.Umbraco.Community.TagManager</Product>
     <PackageId>Our.Umbraco.Community.TagManager</PackageId>
     <Title>Umbraco TagManager</Title>
     <Company></Company>
     <Owners>Huw Reddick</Owners>
-    <Authors>usome;huwred;drummerboy46</Authors>
-    <Description>Tag Manager for Umbraco, initially based on https://github.com/usome/UmbracoTagManager</Description>
+    <Authors>usome, huwred, drummerboy46</Authors>
+    <Description>Backoffice Tag Manager DXP for Umbraco 13.x</Description>
     <RepositoryUrl>https://github.com/drummerboy46/Umbraco-Tag-Manager</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -37,7 +37,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="App_Plugins\TagManager\backoffice\scripts\tagManager.create.controller.js" />
+    <Content Remove="App_Plugins\TagManager\backoffice\scripts\tagManager.createGroup.controller.js" />
+    <Content Remove="App_Plugins\TagManager\backoffice\scripts\tagManager.delete.controller.js" />
+    <Content Remove="App_Plugins\TagManager\backoffice\scripts\tagManager.dropdownFlexible.controller.js" />
+    <Content Remove="App_Plugins\TagManager\backoffice\scripts\tagManager.edit.controller.js" />
+    <Content Remove="App_Plugins\TagManager\backoffice\scripts\tagManager.group.controller.js" />
+    <Content Remove="App_Plugins\TagManager\backoffice\scripts\tagManager.resource.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="App_Plugins\TagList\taglisteditor.html" />
+    <None Remove="App_Plugins\TagManager\backoffice\css\tagManager.css" />
+    <None Remove="App_Plugins\TagManager\backoffice\dashboards\dashboard.html" />
+    <None Remove="App_Plugins\TagManager\backoffice\propertyEditor\dropdownFlexible.html" />
     <None Remove="App_Plugins\TagManager\backoffice\TagManagerTree\create-group.html" />
     <None Remove="App_Plugins\TagManager\backoffice\TagManagerTree\create.html" />
     <None Remove="App_Plugins\TagManager\backoffice\TagManagerTree\delete.html" />
@@ -47,7 +60,6 @@
     <None Remove="App_Plugins\TagManager\lang\en-GB.xml" />
     <None Remove="App_Plugins\TagManager\lang\en-US.xml" />
     <None Remove="App_Plugins\TagManager\lang\en.xml" />
-    <None Remove="App_Plugins\TagManager\lang\nl-NL.xml" />
     <None Remove="App_Plugins\TagManager\TagManager.css" />
   </ItemGroup>
 
