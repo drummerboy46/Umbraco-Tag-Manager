@@ -9,10 +9,6 @@
       {
         "Name": "Usome",
         "Url": "https://our.umbraco.com/members/id:277065/"
-      },
-      {
-        "Name": "Bishal Tim",
-        "Url": "https://our.umbraco.com/members/id:339532/"
       }
     ],
     "SyncContributorsFromRepository": false
@@ -24,7 +20,7 @@
   "RelatedPackages": [],
   "LicenseTypes": [ "Free" ],
   "Tags": [ "umbraco", "plugin", "package", "umbraco-marketplace" ],
-  "Title": "Our.Umbraco.Community.TagManager",
+  "Title": "Umbraco TagManager",
   "VersionSpecificPackageIds": [
     {
       "UmbracoMajorVersion": 13,
