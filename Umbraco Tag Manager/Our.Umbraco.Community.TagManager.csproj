@@ -8,7 +8,7 @@
     <Title>Umbraco TagManager</Title>
     <Company></Company>
     <Owners>Huw Reddick</Owners>
-    <Authors>usome, huwred, drummerboy46</Authors>
+    <Authors>drummerboy46</Authors>
     <Description>Backoffice Tag Manager DXP for Umbraco 13.x</Description>
     <RepositoryUrl>https://github.com/drummerboy46/Umbraco-Tag-Manager</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -17,6 +17,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <ImplicitUsings>disable</ImplicitUsings>
     <PackageIcon>tagmanager.jpeg</PackageIcon>
+    <PackageProjectUrl>https://github.com/drummerboy46/Umbraco-Tag-Manager</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
