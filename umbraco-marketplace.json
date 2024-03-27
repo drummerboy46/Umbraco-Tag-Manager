@@ -21,12 +21,6 @@
   "LicenseTypes": [ "Free" ],
   "Tags": [ "umbraco", "plugin", "package", "umbraco-marketplace" ],
   "Title": "Umbraco TagManager",
-  "VersionSpecificPackageIds": [
-    {
-      "UmbracoMajorVersion": 13,
-      "PackageId": "Our.Umbraco.Community.TagManager"
-    }
-  ],
   "Screenshots": [
     {
       "ImageUrl": "https://github.com/drummerboy46/Umbraco-Tag-Manager/blob/master/dashboard.png?raw=true",
