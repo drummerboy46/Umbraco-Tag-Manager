@@ -57,18 +57,9 @@
     <None Remove="App_Plugins\TagManager\backoffice\TagManagerTree\delete.html" />
     <None Remove="App_Plugins\TagManager\backoffice\TagManagerTree\edit.html" />
     <None Remove="App_Plugins\TagManager\backoffice\TagManagerTree\group.html" />
-    <None Remove="App_Plugins\TagManager\Dashboard.html" />
     <None Remove="App_Plugins\TagManager\lang\en-GB.xml" />
     <None Remove="App_Plugins\TagManager\lang\en-US.xml" />
     <None Remove="App_Plugins\TagManager\lang\en.xml" />
-    <None Remove="App_Plugins\TagManager\TagManager.css" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="App_Plugins\TagManager\TagManager.css">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>
