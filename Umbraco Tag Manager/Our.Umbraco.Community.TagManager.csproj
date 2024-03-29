@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>13.0.4</Version>
+    <Version>13.0.5</Version>
     <ContentTargetFolders>.</ContentTargetFolders>
     <Product>Our.Umbraco.Community.TagManager</Product>
     <PackageId>Our.Umbraco.Community.TagManager</PackageId>
-    <Title>Umbraco TagManager</Title>
+    <Title>Umbraco Tag Manager</Title>
     <Company></Company>
     <Owners>Huw Reddick</Owners>
     <Authors>drummerboy46</Authors>
-    <Description>Backoffice Tag Manager DXP for Umbraco 13.x</Description>
+    <Description>Backoffice Tag Manager Utilities for Umbraco 13.x</Description>
     <RepositoryUrl>https://github.com/drummerboy46/Umbraco-Tag-Manager</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
