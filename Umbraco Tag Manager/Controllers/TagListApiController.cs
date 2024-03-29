@@ -4,12 +4,19 @@ using Umbraco.Cms.Web.BackOffice.Controllers;
 
 namespace Our.Umbraco.Community.TagManager.Controllers
 {
-    public class TagListController(ITagListRepository tagListRepository) : UmbracoAuthorizedApiController
+    public class TagListController : UmbracoAuthorizedApiController
     {
+        private readonly ITagListRepository _tagListRepository;
+
+        public TagListController(ITagListRepository tagListRepository)
+        {
+            _tagListRepository = tagListRepository;
+        }
+
         [HttpGet]
         public string[] GetTagsByGroup(string group)
         {
-            return tagListRepository.GetTagsByGroup(group);
+            return _tagListRepository.GetTagsByGroup(group);
         }
     }
 }

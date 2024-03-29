@@ -11,9 +11,24 @@ using Umbraco.Cms.Infrastructure.Scoping;
 
 namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
 {
-    internal class TagManagerRepository(IScopeProvider scopeProvider, IContentService contentService,
-        IMediaService mediaService, ITagService tagService, ILogger<TagManagerRepository> logger) : ITagManagerRepository
+    internal class TagManagerRepository : ITagManagerRepository
     {
+        private readonly IScopeProvider _scopeProvider;
+        private readonly IContentService _contentService;
+        private readonly IMediaService _mediaService;
+        private readonly ITagService _tagService;
+        private readonly ILogger<TagManagerRepository> _logger;
+
+        public TagManagerRepository(IScopeProvider scopeProvider, IContentService contentService,
+            IMediaService mediaService, ITagService tagService, ILogger<TagManagerRepository> logger)
+        {
+            _scopeProvider = scopeProvider;
+            _contentService = contentService;
+            _mediaService = mediaService;
+            _tagService = tagService;
+            _logger = logger;
+        }
+
         public PagedContent GetPagedContent(int id, int offset = 0, int limit = 10)
         {
             List<TaggedContent> taggedContent = GetTaggedContent(id).Skip(offset).Take(limit).ToList();
@@ -44,7 +59,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
 
             try
             {
-                using (var scope = scopeProvider.CreateScope())
+                using (var scope = _scopeProvider.CreateScope())
                 {
                     string sql = "SELECT id, tag, [group] FROM cmsTags WHERE cmsTags.id = @0";
                     TagItem tagItem = scope.Database.Single<TagItem>(sql, id);
@@ -82,7 +97,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                logger.LogError("Error in GetTagById:", ex);
+                _logger.LogError("Error in GetTagById:", ex);
             }
 
             return tagList;
@@ -94,7 +109,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
 
             try
             {
-                using (var scope = scopeProvider.CreateScope())
+                using (var scope = _scopeProvider.CreateScope())
                 {
                     string sql = "SELECT id, tag, [group] FROM cmsTags WHERE cmsTags.[group] = @0";
                     tagList.TagsInGroup = scope.Database.Fetch<TagItem>(sql, group);
@@ -120,7 +135,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                logger.LogError("Error in GetTagById:", ex);
+                _logger.LogError("Error in GetTagById:", ex);
             }
 
             return tagList;
@@ -132,7 +147,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
 
             try
             {
-                using (var scope = scopeProvider.CreateScope())
+                using (var scope = _scopeProvider.CreateScope())
                 {
                     string sql = "SELECT [group] FROM cmsTags GROUP BY [group] ORDER BY [group];";
                     tagGroups = scope.Database.Fetch<TagGroup>(sql);
@@ -142,7 +157,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                logger.LogError("Error in GetTagGroups:", ex);
+                _logger.LogError("Error in GetTagGroups:", ex);
             }
 
             return tagGroups;
@@ -154,7 +169,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
 
             try
             {
-                using (var scope = scopeProvider.CreateScope())
+                using (var scope = _scopeProvider.CreateScope())
                 {
                     success = scope.Database.ExecuteScalar<int>("INSERT INTO cmsTags (tag, [group]) VALUES (@0, @1); " +
                                                                 "SELECT CAST(SCOPE_IDENTITY() AS INT)",
@@ -164,7 +179,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Error in Create:");
+                _logger.LogError(ex, "Error in Create:");
             }
 
             return success;
@@ -176,7 +191,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
 
             try
             {
-                using (var scope = scopeProvider.CreateScope())
+                using (var scope = _scopeProvider.CreateScope())
                 {
                     if (tagItem.Id == 0)
                     {
@@ -190,7 +205,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Error in Create:");
+                _logger.LogError(ex, "Error in Create:");
             }
 
             return success;
@@ -202,14 +217,14 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
 
             try
             {
-                using (var scope = scopeProvider.CreateScope())
+                using (var scope = _scopeProvider.CreateScope())
                 {
                     success = scope.Database.Execute("UPDATE cmsTags SET tag = @0 WHERE id = @1",
                         tagList.TagItem.Tag, tagList.TagItem.Id);
 
                     if (success == 1 && tagList.MergeTag != null && tagList.TagItem.Id != tagList.MergeTag.Id)
                     {
-                        List<TagItem> mergeTagForUpdate = [tagList.MergeTag];
+                        List<TagItem> mergeTagForUpdate = new() { tagList.MergeTag };
 
                         scope.Database.Execute("UPDATE cmsTagRelationship SET tagID = @0 WHERE tagID = @1 AND" +
                                                " nodeId NOT IN (SELECT nodeId FROM cmsTagRelationship WHERE tagId = @0);",
@@ -222,7 +237,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
                         UpdateMedia(mergeTagForUpdate);
                     }
 
-                    List<TagItem> tagForUpdate = [tagList.TagItem];
+                    List<TagItem> tagForUpdate = new() { tagList.TagItem };
 
                     UpdateContent(tagForUpdate);
                     UpdateMedia(tagForUpdate);
@@ -235,7 +250,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                logger.LogError("Error in Save:", ex);
+                _logger.LogError("Error in Save:", ex);
             }
 
             return success;
@@ -248,14 +263,14 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
 
             try
             {
-                using (var scope = scopeProvider.CreateScope())
+                using (var scope = _scopeProvider.CreateScope())
                 {
                     var sqlQuery1 = $"DELETE FROM cmsTagRelationship WHERE tagId = @0;";
                     var sqlQuery2 = $"DELETE FROM cmsTags WHERE id = @0;";
                     scope.Database.Execute(sqlQuery1, tagList.TagItem.Id);
                     scope.Database.Execute(sqlQuery2, tagList.TagItem.Id);
 
-                    List<TagItem> tags = [tagList.TagItem];
+                    List<TagItem> tags = new() { tagList.TagItem };
 
                     UpdateContent(tags);
                     UpdateMedia(tags);
@@ -267,7 +282,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                logger.LogError("Error in Delete:", ex);
+                _logger.LogError("Error in Delete:", ex);
             }
 
             return success;
@@ -280,7 +295,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
 
             try
             {
-                using (var scope = scopeProvider.CreateScope())
+                using (var scope = _scopeProvider.CreateScope())
                 {
                     List<string> tagIds = tagList.TagsInGroup.Where(x => x.TagSelected).Select(x => x.Id.ToString()).ToList();
                     IEnumerable<TagItem> tagItems = tagList.TagsInGroup.Where(x => x.TagSelected).ToList();
@@ -300,7 +315,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                logger.LogError("Error in Delete Tags:", ex);
+                _logger.LogError("Error in Delete Tags:", ex);
             }
 
             return success;
@@ -312,14 +327,14 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
 
             try
             {
-                using (var scope = scopeProvider.CreateScope())
+                using (var scope = _scopeProvider.CreateScope())
                 {
                     var query = $"SELECT nodeId AS Id FROM cmsTagRelationship WHERE tagId = @0;";
                     var results = scope.Database.Fetch<TaggedContent>(query, tagId);
 
                     foreach (var result in results)
                     {
-                        var n = contentService.GetById(result.Id);
+                        var n = _contentService.GetById(result.Id);
                         if (n != null)
                         {
                             if (!string.IsNullOrWhiteSpace(n.Name))
@@ -339,7 +354,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                logger.LogError("Error in GetTaggedDocumentNodeIds:", ex);
+                _logger.LogError("Error in GetTaggedDocumentNodeIds:", ex);
             }
 
             return contentList;
@@ -351,14 +366,14 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
 
             try
             {
-                using (var scope = scopeProvider.CreateScope())
+                using (var scope = _scopeProvider.CreateScope())
                 {
                     var query = $"SELECT nodeId AS Id FROM cmsTagRelationship WHERE tagId = @0;";
                     var results = scope.Database.Fetch<TaggedMedia>(query, tagId);
 
                     foreach (var result in results)
                     {
-                        var n = mediaService.GetById(result.Id);
+                        var n = _mediaService.GetById(result.Id);
                         if (n != null)
                         {
                             if (!string.IsNullOrWhiteSpace(n.Name))
@@ -378,7 +393,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                logger.LogError("Error in GetTaggedMediaNodeIds:", ex);
+                _logger.LogError("Error in GetTaggedMediaNodeIds:", ex);
             }
 
             return mediaList;
@@ -394,7 +409,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
 
                 foreach (var item in tag.TaggedContent)
                 {
-                    IContent content = contentService.GetById(item.Id);
+                    IContent content = _contentService.GetById(item.Id);
                     string propertyAlias;
 
                     content!.Properties.ForEach(bItem =>
@@ -405,7 +420,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
                             string tagsVal = content.GetValue<string>(propertyAlias!);
                             string tagsFormat = tagsVal.Contains("[") ? "json" : "csv";
 
-                            IEnumerable<string> tagsToUpdate = tagService.GetTagsForEntity(item.Id, tagItems.FirstOrDefault()!.Group).Select(x => x.Text).ToList();
+                            IEnumerable<string> tagsToUpdate = _tagService.GetTagsForEntity(item.Id, tagItems.FirstOrDefault()!.Group).Select(x => x.Text).ToList();
 
                             if (tagsFormat == "csv")
                             {
@@ -418,7 +433,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
                                 content.SetValue(propertyAlias, jsonTags);
                             }
 
-                            contentService.SaveAndPublish(content);
+                            _contentService.SaveAndPublish(content);
                         }
                     });
                 }
@@ -435,7 +450,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
 
                 foreach (var item in tag.TaggedMedia)
                 {
-                    IMedia media = mediaService.GetById(item.Id);
+                    IMedia media = _mediaService.GetById(item.Id);
                     string propertyAlias;
 
                     media!.Properties.ForEach(bItem =>
@@ -446,7 +461,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
                             string tagsVal = media.GetValue<string>(propertyAlias!);
                             string tagsFormat = tagsVal.Contains("[") ? "json" : "csv";
 
-                            IEnumerable<string> tagsToUpdate = tagService.GetTagsForEntity(item.Id, tagItems.FirstOrDefault()!.Group).Select(x => x.Text).ToList();
+                            IEnumerable<string> tagsToUpdate = _tagService.GetTagsForEntity(item.Id, tagItems.FirstOrDefault()!.Group).Select(x => x.Text).ToList();
 
                             if (tagsFormat == "csv")
                             {
@@ -458,7 +473,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
                                 string jsonTags = JsonConvert.SerializeObject(tagsToUpdate.ToArray(), Formatting.None);
                                 media.SetValue(propertyAlias, jsonTags);
                             }
-                            mediaService.Save(media);
+                            _mediaService.Save(media);
                         }
                     });
                 }

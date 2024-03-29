@@ -9,19 +9,21 @@ using Umbraco.Cms.Infrastructure.Packaging;
 
 namespace Our.Umbraco.Community.TagManager.Migrations
 {
-    public class TagManagerMigrationHelper(
-        IPackagingService packagingService,
-        IMediaService mediaService,
-        MediaFileManager mediaFileManager,
-        MediaUrlGeneratorCollection mediaUrlGenerators,
-        IShortStringHelper shortStringHelper,
-        IContentTypeBaseServiceProvider contentTypeBaseServiceProvider,
-        IMigrationContext context,
-        IOptions<PackageMigrationSettings> packageMigrationsSettings)
-        : PackageMigrationBase(packagingService, mediaService, mediaFileManager, mediaUrlGenerators, shortStringHelper,
-            contentTypeBaseServiceProvider, context, packageMigrationsSettings)
+    public class TagManagerMigrationHelper : PackageMigrationBase
     {
         private readonly string[] _userGroups = { "admin", "editor", "writer" };
+
+        public TagManagerMigrationHelper(IPackagingService packagingService,
+            IMediaService mediaService,
+            MediaFileManager mediaFileManager,
+            MediaUrlGeneratorCollection mediaUrlGenerators,
+            IShortStringHelper shortStringHelper,
+            IContentTypeBaseServiceProvider contentTypeBaseServiceProvider,
+            IMigrationContext context,
+            IOptions<PackageMigrationSettings> packageMigrationsSettings) : base(packagingService, mediaService, mediaFileManager, mediaUrlGenerators, shortStringHelper,
+            contentTypeBaseServiceProvider, context, packageMigrationsSettings)
+        {
+        }
 
         protected override void Migrate()
         {

@@ -6,9 +6,16 @@ using Umbraco.Cms.Infrastructure.Scoping;
 
 namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
 {
-    internal class TagListRepository(ILogger<TagManagerRepository> logger, IScopeProvider scopeProvider)
-        : ITagListRepository
+    internal class TagListRepository : ITagListRepository
     {
+        private readonly ILogger<TagManagerRepository> _logger;
+        private readonly IScopeProvider _scopeProvider;
+
+        public TagListRepository(ILogger<TagManagerRepository> logger, IScopeProvider scopeProvider)
+        {
+            _logger = logger;
+            _scopeProvider = scopeProvider;
+        }
 
         public string[] GetTagsByGroup(string group)
         {
@@ -16,7 +23,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             string[] tags = null;
             try
             {
-                using (var scope = scopeProvider.CreateScope())
+                using (var scope = _scopeProvider.CreateScope())
                 {
                     string sql = "SELECT tag AS text FROM cmsTags WHERE [group] = @0";
                     tags = scope.Database.Fetch<string>(sql, group).ToArray();
@@ -26,7 +33,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                logger.LogError("Error returning a string array in GetTagsByGroupAndSize:", ex);
+                _logger.LogError("Error returning a string array in GetTagsByGroupAndSize:", ex);
             }
             return tags;
         }

@@ -1,71 +1,65 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>13.0.5</Version>
-    <ContentTargetFolders>.</ContentTargetFolders>
-    <Product>Our.Umbraco.Community.TagManager</Product>
-    <PackageId>Our.Umbraco.Community.TagManager</PackageId>
-    <Title>Umbraco Tag Manager</Title>
-    <Company></Company>
-    <Owners>Huw Reddick</Owners>
-    <Authors>drummerboy46</Authors>
-    <Description>Backoffice Tag Manager Utilities for Umbraco 13.x</Description>
-    <RepositoryUrl>https://github.com/drummerboy46/Umbraco-Tag-Manager</RepositoryUrl>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageTags>umbraco-marketplace;umbraco;plugin;package;DXP;tag</PackageTags>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <PackageIcon>tagmanager.jpeg</PackageIcon>
-    <PackageProjectUrl>https://github.com/drummerboy46/Umbraco-Tag-Manager</PackageProjectUrl>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
+		<Version>13.0.5</Version>
+		<ContentTargetFolders>.</ContentTargetFolders>
+		<Product>Our.Umbraco.Community.TagManager</Product>
+		<PackageId>Our.Umbraco.Community.TagManager</PackageId>
+		<Title>Umbraco Tag Manager</Title>
+		<Company></Company>
+		<Owners>drummerboy46</Owners>
+		<Authors>drummerboy46</Authors>
+		<Description>Backoffice Tag Manager Utilities for Umbraco 10, 12 and 13</Description>
+		<RepositoryUrl>https://github.com/drummerboy46/Umbraco-Tag-Manager</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageTags>umbraco-marketplace;umbraco;plugin;package;DXP;tag</PackageTags>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<PackageIcon>tagmanager.jpeg</PackageIcon>
+		<PackageProjectUrl>https://github.com/drummerboy46/Umbraco-Tag-Manager</PackageProjectUrl>
+	</PropertyGroup>
+	
+	<ItemGroup Condition="$(TargetFramework) == 'net8.0'">
+		<PackageReference Include="Umbraco.Cms.Core" Version="13.2.2" />
+		<PackageReference Include="Umbraco.Cms.Web.Website" Version="13.2.2" PrivateAssets="All" />
+		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="13.2.2" PrivateAssets="All" />
+	</ItemGroup>
+	<ItemGroup Condition="$(TargetFramework) == 'net7.0'">
+		<PackageReference Include="Umbraco.Cms.Core" Version="12.3.9" />
+		<PackageReference Include="Umbraco.Cms.Web.Website" Version="12.3.9" PrivateAssets="All" />
+		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="12.3.9" PrivateAssets="All" />
+	</ItemGroup>
+	<ItemGroup Condition="$(TargetFramework) == 'net6.0'">
+		<PackageReference Include="Umbraco.Cms.Core" Version="10.8.5" />
+		<PackageReference Include="Umbraco.Cms.Web.Website" Version="10.8.5" PrivateAssets="All" />
+		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="10.8.5" PrivateAssets="All" />
+	</ItemGroup>
 
-  <ItemGroup>
-	  <PackageReference Include="Umbraco.Cms.Core" Version="13.2.2" />
-	  <PackageReference Include="Umbraco.Cms.Web.Website" Version="13.2.2" PrivateAssets="All" />
-	  <PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="13.2.2" PrivateAssets="All" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="App_Plugins\TagManager\**\*.*">
+			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+		</Content>
+		<Content Include="App_Plugins\TagList\**\*.*">
+			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+		</Content>
+		<None Include="README.md">
+			<Pack>true</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="build\**\*.*">
+			<Pack>true</Pack>
+			<PackagePath>build</PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="App_Plugins\TagManager\**" ExcludeFromSingleFile="true" CopyToPublishDirectory="Always" />
-    <Content Include="App_Plugins\TagList\**" ExcludeFromSingleFile="true" CopyToPublishDirectory="Always" />
-    <None Include="..\README.md" Pack="true" PackagePath="\" />
-    <None Include="buildTransitive\**" Pack="true" PackagePath="buildTransitive" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="TagManagerStartup.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="App_Plugins\TagManager\backoffice\scripts\tagManager.create.controller.js" />
-    <Content Remove="App_Plugins\TagManager\backoffice\scripts\tagManager.createGroup.controller.js" />
-    <Content Remove="App_Plugins\TagManager\backoffice\scripts\tagManager.delete.controller.js" />
-    <Content Remove="App_Plugins\TagManager\backoffice\scripts\tagManager.dropdownFlexible.controller.js" />
-    <Content Remove="App_Plugins\TagManager\backoffice\scripts\tagManager.edit.controller.js" />
-    <Content Remove="App_Plugins\TagManager\backoffice\scripts\tagManager.group.controller.js" />
-    <Content Remove="App_Plugins\TagManager\backoffice\scripts\tagManager.resource.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="App_Plugins\TagList\taglisteditor.html" />
-    <None Remove="App_Plugins\TagManager\backoffice\css\tagManager.css" />
-    <None Remove="App_Plugins\TagManager\backoffice\dashboards\dashboard.html" />
-    <None Remove="App_Plugins\TagManager\backoffice\propertyEditor\dropdownFlexible.html" />
-    <None Remove="App_Plugins\TagManager\backoffice\TagManagerTree\create-group.html" />
-    <None Remove="App_Plugins\TagManager\backoffice\TagManagerTree\create.html" />
-    <None Remove="App_Plugins\TagManager\backoffice\TagManagerTree\delete.html" />
-    <None Remove="App_Plugins\TagManager\backoffice\TagManagerTree\edit.html" />
-    <None Remove="App_Plugins\TagManager\backoffice\TagManagerTree\group.html" />
-    <None Remove="App_Plugins\TagManager\lang\en-GB.xml" />
-    <None Remove="App_Plugins\TagManager\lang\en-US.xml" />
-    <None Remove="App_Plugins\TagManager\lang\en.xml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="tagmanager.jpeg">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="tagmanager.jpeg">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 </Project>

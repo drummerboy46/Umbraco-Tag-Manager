@@ -17,15 +17,20 @@ namespace Our.Umbraco.Community.TagManager.Controllers
 {
     [PluginController(StringConstants.PluginAlias)]
     [Tree(StringConstants.SectionAlias, StringConstants.TreeAlias, TreeGroup = StringConstants.TreeGroup)]
-    public class TagManagerTreeController(
-        ILocalizedTextService localizedTextService,
-        UmbracoApiControllerTypeCollection umbracoApiControllerTypeCollection,
-        IEventAggregator eventAggregator,
-        ITagManagerRepository tagManagerRepository,
-        IMenuItemCollectionFactory menuItemCollectionFactory)
-        : TreeController(localizedTextService, umbracoApiControllerTypeCollection, eventAggregator)
+    public class TagManagerTreeController : TreeController
     {
-        private readonly IMenuItemCollectionFactory _menuItemCollectionFactory = menuItemCollectionFactory ?? throw new ArgumentNullException(nameof(menuItemCollectionFactory));
+        private readonly IMenuItemCollectionFactory _menuItemCollectionFactory;
+        private readonly ITagManagerRepository _tagManagerRepository;
+
+        public TagManagerTreeController(ILocalizedTextService localizedTextService,
+            UmbracoApiControllerTypeCollection umbracoApiControllerTypeCollection,
+            IEventAggregator eventAggregator,
+            ITagManagerRepository tagManagerRepository,
+            IMenuItemCollectionFactory menuItemCollectionFactory) : base(localizedTextService, umbracoApiControllerTypeCollection, eventAggregator)
+        {
+            _tagManagerRepository = tagManagerRepository;
+            _menuItemCollectionFactory = menuItemCollectionFactory ?? throw new ArgumentNullException(nameof(menuItemCollectionFactory));
+        }
 
         protected override ActionResult<TreeNodeCollection> GetTreeNodes(string id, FormCollection queryStrings)
         {
@@ -34,7 +39,7 @@ namespace Our.Umbraco.Community.TagManager.Controllers
             if (id == Constants.System.Root.ToInvariantString())
             {
                 //top level nodes - generate list of tag groups.       
-                foreach (var tagGroup in tagManagerRepository.GetTagGroups())
+                foreach (var tagGroup in _tagManagerRepository.GetTagGroups())
                 {
                     var item = CreateTreeNode("tagGroup-" + tagGroup.Group, id, null, tagGroup.Group, "icon-tags", true, queryStrings.GetValue<string>("application"));
                     item.RoutePath = $"{StringConstants.SectionAlias}/{StringConstants.TreeAlias}/{StringConstants.DetailAction}/{tagGroup.Group}";
@@ -44,7 +49,7 @@ namespace Our.Umbraco.Community.TagManager.Controllers
             else
             {
                 var group = id.Substring(id.IndexOf('-') + 1);
-                TagList cmsTags = tagManagerRepository.GetTagsByGroup(group);
+                TagList cmsTags = _tagManagerRepository.GetTagsByGroup(group);
 
                 //List all tags under group
                 foreach (var tag in cmsTags.TagsInGroup)
