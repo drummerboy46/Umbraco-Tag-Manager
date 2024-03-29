@@ -20,7 +20,7 @@
   "RelatedPackages": [],
   "LicenseTypes": [ "Free" ],
   "Tags": [ "umbraco", "plugin", "package", "umbraco-marketplace" ],
-  "Title": "Umbraco TagManager",
+  "Title": "Umbraco Tag Manager",
   "Screenshots": [
     {
       "ImageUrl": "https://github.com/drummerboy46/Umbraco-Tag-Manager/blob/master/dashboard.png?raw=true",
