@@ -19,6 +19,7 @@ Functionality includes:
 3. Indication of how many times the Tag is currently being used (number in brackets in Group overview).
 4. Ability to merge Tags - useful in cases of spelling mistakes, cleaning up Tags, etc.
 5. Links to content and media where Tag is used.
+6. Coming soon - language variant support
 
 ## Tag List
 Provides a multi select (read-only) list of all tags assigned to the group. 
