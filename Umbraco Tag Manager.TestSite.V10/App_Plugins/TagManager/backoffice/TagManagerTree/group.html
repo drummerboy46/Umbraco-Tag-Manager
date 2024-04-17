@@ -1,0 +1,31 @@
+<div>
+    <ng-form ng-controller="tagManager.group.controller as vm">
+        <umb-editor-view>
+            <umb-editor-header name="title" hide-icon="true" hide-description="true" hide-alias="true" name-locked="true"></umb-editor-header>
+            <umb-editor-container>
+                <umb-editor-sub-header>
+                    <umb-editor-sub-header-content-left>
+                        <umb-button action="navigateToCreateTag()" ng-show="selectedTags.length == 0" type="button" button-style="outline" label="Create Tag"></umb-button>
+                        <div ng-show="selectedTags.length > 0">
+                            <umb-button ng-click="clearSelection()" type="button" button-style="outline" label="Clear Selection"></umb-button>
+                            <span>{{ selectedTags.length }} of {{ tags.length }} selected</span>
+                            <umb-button ng-click="openOverlay(cmsTags)" type="button" button-style="danger" icon="icon-trash" label="Delete"></umb-button>
+                        </div>
+                    </umb-editor-sub-header-content-left>
+                    <umb-editor-sub-header-content-right>
+                        <umb-search-filter text="Type to filter..." model="vm.filter.searchTerm"></umb-search-filter>
+                    </umb-editor-sub-header-content-right>
+                </umb-editor-sub-header>
+                <div class="tags-grid-container">
+                    <div class="tag-cards-container">
+                        <umb-box ng-repeat="item in cmsTags.tagsInGroup | filter: { 'tag':vm.filter.searchTerm }" class="tag-card" ng-class="{ 'selected': item.tagSelected }" ng-click="toggleSelectTag(item)">
+                            <umb-box-content>
+                                <umb-button action="navigateToEditTag(item.id)" button-style="link" label="{{item.tag}} ({{item.tagRelationshipCount}})" icon="icon-tag"></umb-button>
+                            </umb-box-content>
+                        </umb-box>
+                    </div>
+                </div>
+            </umb-editor-container>
+        </umb-editor-view>
+    </ng-form>
+</div>

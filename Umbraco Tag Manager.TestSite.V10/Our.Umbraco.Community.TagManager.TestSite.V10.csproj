@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Our.Umbraco.Community.TagManager.TestSite.V10</RootNamespace>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Clean" Version="3.1.4" />
+    <PackageReference Include="Umbraco.Cms" Version="10.8.5" />
+    <!-- Opt-in to app-local ICU to ensure consistent globalization APIs across different platforms -->
+    <PackageReference Include="Microsoft.ICU.ICU4C.Runtime" Version="68.2.0.9" />
+    <PackageReference Include="uSync" Version="10.7.3" />
+    <ProjectReference Include="..\Umbraco Tag Manager\Our.Umbraco.Community.TagManager.csproj" />
+    <RuntimeHostConfigurationOption Include="System.Globalization.AppLocalIcu" Value="68.2.0.9" Condition="$(RuntimeIdentifier.StartsWith('linux')) or $(RuntimeIdentifier.StartsWith('win')) or ('$(RuntimeIdentifier)' == '' and !$([MSBuild]::IsOSPlatform('osx')))" />
+  </ItemGroup>
+
+
+  <PropertyGroup>
+    <!-- Razor files are needed for the backoffice to work correctly -->
+    <CopyRazorGenerateFilesToPublishDirectory>true</CopyRazorGenerateFilesToPublishDirectory>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Remove RazorCompileOnBuild and RazorCompileOnPublish when not using ModelsMode InMemoryAuto -->
+    <RazorCompileOnBuild>false</RazorCompileOnBuild>
+    <RazorCompileOnPublish>false</RazorCompileOnPublish>
+  </PropertyGroup>
+
+
+	<Target Name="CopyAppPlugins" AfterTargets="BeforeBuild">
+		<ItemGroup>
+			<ApplicationPluginFiles Include="..\Umbraco Tag Manager\App_Plugins\**\*.*" />
+		</ItemGroup>
+		<Copy SourceFiles="@(ApplicationPluginFiles)" DestinationFiles="@(ApplicationPluginFiles->'$(ProjectDir)\App_Plugins\%(RecursiveDir)%(Filename)%(Extension)')" />
+	</Target>
+
+	<Target Name="ClearAppPlugins" BeforeTargets="Clean">
+		<ItemGroup>
+			<ApplicationPluginDir Include="$(MSBuildProjectDirectory)\App_Plugins\" />
+		</ItemGroup>
+		<Message Text="Clear old package files" Importance="high" />
+		<RemoveDir Directories="@(ApplicationPluginDir)" />
+	</Target>
+
+</Project>

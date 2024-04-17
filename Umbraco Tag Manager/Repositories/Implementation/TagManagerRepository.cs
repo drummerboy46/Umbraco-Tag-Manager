@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using NPoco;
 using NUglify.Helpers;
 using Our.Umbraco.Community.TagManager.Models;
 using Umbraco.Cms.Core.Models;
@@ -17,15 +18,18 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
         private readonly IContentService _contentService;
         private readonly IMediaService _mediaService;
         private readonly ITagService _tagService;
+        private readonly ILocalizationService _localizationService;
         private readonly ILogger<TagManagerRepository> _logger;
 
+
         public TagManagerRepository(IScopeProvider scopeProvider, IContentService contentService,
-            IMediaService mediaService, ITagService tagService, ILogger<TagManagerRepository> logger)
+            IMediaService mediaService, ITagService tagService, ILocalizationService localizationService, ILogger<TagManagerRepository> logger)
         {
             _scopeProvider = scopeProvider;
             _contentService = contentService;
             _mediaService = mediaService;
             _tagService = tagService;
+            _localizationService = localizationService;
             _logger = logger;
         }
 
@@ -61,7 +65,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             {
                 using (var scope = _scopeProvider.CreateScope())
                 {
-                    string sql = "SELECT id, tag, [group] FROM cmsTags WHERE cmsTags.id = @0";
+                    string sql = "SELECT id, [group], languageId, tag FROM cmsTags WHERE cmsTags.id = @0";
                     TagItem tagItem = scope.Database.Single<TagItem>(sql, id);
                     tagList.TagItem = tagItem;
 
@@ -76,7 +80,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
                     tagItem.TagRelationships = tagRelationships.Where(x => x.TagId == id).ToList();
                     tagItem.TagRelationshipCount = tagItem.TagRelationships.Count;
 
-                    sql = "SELECT id, tag, [group] FROM cmsTags WHERE cmsTags.[group] = @0";
+                    sql = "SELECT id, [group], languageId, tag FROM cmsTags WHERE cmsTags.[group] = @0";
                     tagList.TagsInGroup = scope.Database.Fetch<TagItem>(sql, tagItem.Group);
 
                     if (tagList.TagsInGroup != null)
@@ -97,7 +101,9 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error in GetTagById:", ex);
+                _logger.LogError(ex, "GetTagsById | Exception: {0} | Message: {1} | Stack Trace: {2}",
+                    ex.InnerException != null ? ex.InnerException!.ToString() : "",
+                    ex.Message, ex.StackTrace);
             }
 
             return tagList;
@@ -106,12 +112,11 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
         public TagList GetTagsByGroup(string group)
         {
             TagList tagList = new TagList();
-
             try
             {
                 using (var scope = _scopeProvider.CreateScope())
                 {
-                    string sql = "SELECT id, tag, [group] FROM cmsTags WHERE cmsTags.[group] = @0";
+                    var sql = "SELECT id, [group], languageId, tag  FROM cmsTags WHERE cmsTags.[group] = @0";
                     tagList.TagsInGroup = scope.Database.Fetch<TagItem>(sql, group);
 
                     sql = "SELECT nodeId, tagId, propertyTypeId FROM cmsTagRelationship";
@@ -135,7 +140,9 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error in GetTagById:", ex);
+                _logger.LogError(ex, "GetTagsByGroup | Exception: {0} | Message: {1} | Stack Trace: {2}",
+                    ex.InnerException != null ? ex.InnerException!.ToString() : "",
+                    ex.Message, ex.StackTrace);
             }
 
             return tagList;
@@ -157,7 +164,9 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error in GetTagGroups:", ex);
+                _logger.LogError(ex, "GetTagGroups | Exception: {0} | Message: {1} | Stack Trace: {2}",
+                    ex.InnerException != null ? ex.InnerException!.ToString() : "",
+                    ex.Message, ex.StackTrace);
             }
 
             return tagGroups;
@@ -166,20 +175,29 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
         public int CreateGroup(string group = "default")
         {
             var success = 0;
+            IEnumerable<ILanguage> languages = _localizationService.GetAllLanguages().ToList();
+            ILanguage defaultLanguage = languages.FirstOrDefault(x => x.IsDefault);
+            int? languageId = languages.Count() > 1 ? defaultLanguage!.Id : null;
 
             try
             {
                 using (var scope = _scopeProvider.CreateScope())
                 {
-                    success = scope.Database.ExecuteScalar<int>("INSERT INTO cmsTags (tag, [group]) VALUES (@0, @1); " +
-                                                                "SELECT CAST(SCOPE_IDENTITY() AS INT)",
-                        "default", group);
+                    if (scope.Database.DatabaseType == DatabaseType.SQLite)
+                        success = scope.Database.ExecuteScalar<int>("INSERT INTO cmsTags ([group], languageId, tag) VALUES (@0, @1, @2); " +
+                                                                    "SELECT last_insert_rowid()", group, languageId, "default");
+                    else
+                        success = scope.Database.ExecuteScalar<int>("INSERT INTO cmsTags ([group], languageId, tag) VALUES (@0, @1, @2); " +
+                                                                    "SELECT CAST(SCOPE_IDENTITY() AS INT)", group, languageId, "default");
+
                     scope.Complete();
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in Create:");
+                _logger.LogError(ex, "CreateGroup | Exception: {0} | Message: {1} | Stack Trace: {2}",
+                    ex.InnerException != null ? ex.InnerException!.ToString() : "",
+                    ex.Message, ex.StackTrace);
             }
 
             return success;
@@ -188,6 +206,9 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
         public int CreateTag(TagItem tagItem)
         {
             var success = 0;
+            IEnumerable<ILanguage> languages = _localizationService.GetAllLanguages().ToList();
+            ILanguage defaultLanguage = languages.FirstOrDefault(x => x.IsDefault);
+            int? languageId = languages.Count() > 1 ? tagItem.LanguageId : null;
 
             try
             {
@@ -195,17 +216,21 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
                 {
                     if (tagItem.Id == 0)
                     {
-                        success = scope.Database.ExecuteScalar<int>("INSERT INTO cmsTags (tag, [group]) VALUES (@0, @1); " +
-                                                                    "SELECT CAST(SCOPE_IDENTITY() AS INT)",
-                            tagItem.Tag, tagItem.Group);
+                        if (scope.Database.DatabaseType == DatabaseType.SQLite)
+                            success = scope.Database.ExecuteScalar<int>("INSERT INTO cmsTags ([group], languageId, tag) VALUES (@0, @1, @2); " +
+                                                                        "SELECT last_insert_rowid()", tagItem.Group, languageId, tagItem.Tag);
+                        else
+                            success = scope.Database.ExecuteScalar<int>("INSERT INTO cmsTags ([group], languageId, tag) VALUES (@0, @1, @2); " +
+                                                                        "SELECT CAST(SCOPE_IDENTITY() AS INT)", tagItem.Group, languageId, tagItem.Tag);
                     }
                     scope.Complete();
-
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in Create:");
+                _logger.LogError(ex, "CreateTag | Exception: {0} | Message: {1} | Stack Trace: {2}",
+                    ex.InnerException != null ? ex.InnerException!.ToString() : "",
+                    ex.Message, ex.StackTrace);
             }
 
             return success;
@@ -250,7 +275,9 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error in Save:", ex);
+                _logger.LogError(ex, "SaveTag | Exception: {0} | Message: {1} | Stack Trace: {2}",
+                    ex.InnerException != null ? ex.InnerException!.ToString() : "",
+                    ex.Message, ex.StackTrace);
             }
 
             return success;
@@ -282,7 +309,9 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error in Delete:", ex);
+                _logger.LogError(ex, "DeleteTag | Exception: {0} | Message: {1} | Stack Trace: {2}",
+                    ex.InnerException != null ? ex.InnerException!.ToString() : "",
+                    ex.Message, ex.StackTrace);
             }
 
             return success;
@@ -315,7 +344,9 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error in Delete Tags:", ex);
+                _logger.LogError(ex, "DeleteTags | Exception: {0} | Message: {1} | Stack Trace: {2}",
+                    ex.InnerException != null ? ex.InnerException!.ToString() : "",
+                    ex.Message, ex.StackTrace);
             }
 
             return success;
@@ -334,7 +365,7 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
 
                     foreach (var result in results)
                     {
-                        var n = _contentService.GetById(result.Id);
+                        IContent n = _contentService.GetById(result.Id);
                         if (n != null)
                         {
                             if (!string.IsNullOrWhiteSpace(n.Name))
@@ -354,7 +385,9 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error in GetTaggedDocumentNodeIds:", ex);
+                _logger.LogError(ex, "GetTaggedContent | Exception: {0} | Message: {1} | Stack Trace: {2}",
+                    ex.InnerException != null ? ex.InnerException!.ToString() : "",
+                    ex.Message, ex.StackTrace);
             }
 
             return contentList;
@@ -393,7 +426,9 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error in GetTaggedMediaNodeIds:", ex);
+                _logger.LogError(ex, "GetTaggedMedia | Exception: {0} | Message: {1} | Stack Trace: {2}",
+                    ex.InnerException != null ? ex.InnerException!.ToString() : "",
+                    ex.Message, ex.StackTrace);
             }
 
             return mediaList;
@@ -406,6 +441,8 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
             foreach (TagItem tag in tagItems)
             {
                 List<TagRelationship> tagRelations = tag.TagRelationships;
+                IEnumerable<ILanguage> languages = _localizationService.GetAllLanguages().ToList();
+                string culture = languages.Count() > 1 ? languages.Where(x => x.Id == tag.LanguageId).Select(x => x.IsoCode).FirstOrDefault() : null;
 
                 foreach (var item in tag.TaggedContent)
                 {
@@ -417,21 +454,10 @@ namespace Our.Umbraco.Community.TagManager.Repositories.Implementation
                         if (tagRelations.Any(x => x.PropertyTypeId == bItem.PropertyTypeId))
                         {
                             propertyAlias = bItem.Alias;
-                            string tagsVal = content.GetValue<string>(propertyAlias!);
-                            string tagsFormat = tagsVal.Contains("[") ? "json" : "csv";
-
-                            IEnumerable<string> tagsToUpdate = _tagService.GetTagsForEntity(item.Id, tagItems.FirstOrDefault()!.Group).Select(x => x.Text).ToList();
-
-                            if (tagsFormat == "csv")
-                            {
-                                string csvTags = string.Join(',', tagItems);
-                                content.SetValue(propertyAlias, csvTags);
-                            }
-                            else
-                            {
-                                string jsonTags = JsonConvert.SerializeObject(tagsToUpdate.ToArray(), Formatting.None);
-                                content.SetValue(propertyAlias, jsonTags);
-                            }
+                            string group = tagItems.FirstOrDefault()!.Group;
+                            IEnumerable<string> tagsToUpdate = _tagService.GetTagsForEntity(item.Id, group, culture).Select(x => x.Text).ToList();
+                            string jsonTags = JsonConvert.SerializeObject(tagsToUpdate.ToArray(), Formatting.None);
+                            content.SetValue(propertyAlias, jsonTags, culture);
 
                             _contentService.SaveAndPublish(content);
                         }

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
-		<Version>13.0.5</Version>
+		<Version>13.1.0</Version>
 		<ContentTargetFolders>.</ContentTargetFolders>
 		<Product>Our.Umbraco.Community.TagManager</Product>
 		<PackageId>Our.Umbraco.Community.TagManager</PackageId>
@@ -20,7 +20,7 @@
 		<PackageIcon>tagmanager.jpeg</PackageIcon>
 		<PackageProjectUrl>https://github.com/drummerboy46/Umbraco-Tag-Manager</PackageProjectUrl>
 	</PropertyGroup>
-	
+
 	<ItemGroup Condition="$(TargetFramework) == 'net8.0'">
 		<PackageReference Include="Umbraco.Cms.Core" Version="13.2.2" />
 		<PackageReference Include="Umbraco.Cms.Web.Website" Version="13.2.2" PrivateAssets="All" />
@@ -54,9 +54,6 @@
 			<Pack>true</Pack>
 			<PackagePath>build</PackagePath>
 		</None>
-	</ItemGroup>
-
-	<ItemGroup>
 		<None Include="tagmanager.jpeg">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>

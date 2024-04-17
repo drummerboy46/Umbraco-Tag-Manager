@@ -1,0 +1,11 @@
+﻿<div ng-controller="TagListController as vm" class="taglist-editor">
+    <span ng-if="vm.loading">
+        <umb-load-indicator></umb-load-indicator>
+    </span>
+    <ng-form name="taglistEditorForm" class="ng-pristine ng-valid ng-valid-required" ng-if="!vm.loading">
+        <select class="umb-property-editor umb-dropdown ng-pristine ng-untouched ng-valid ng-scope ng-empty ng-valid-required"
+                ng-options="item as item for item in vm.cmsTags track by item"
+                ng-model="model.value"
+                multiple aria-multiselectable="true" size="15"></select>
+    </ng-form>
+</div>

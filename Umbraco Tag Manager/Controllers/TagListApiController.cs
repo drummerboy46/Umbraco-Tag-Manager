@@ -14,9 +14,9 @@ namespace Our.Umbraco.Community.TagManager.Controllers
         }
 
         [HttpGet]
-        public string[] GetTagsByGroup(string group)
+        public string[] GetTagsByGroup(string group, string culture)
         {
-            return _tagListRepository.GetTagsByGroup(group);
+            return _tagListRepository.GetTagsByGroup(group, culture);
         }
     }
 }

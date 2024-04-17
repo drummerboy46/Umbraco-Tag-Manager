@@ -9,11 +9,14 @@ namespace Our.Umbraco.Community.TagManager.Models
         [DataMember(Name = "id")]
         public int Id { get; set; }
 
-        [DataMember(Name = "tag")]
-        public string Tag { get; set; }
-
         [DataMember(Name = "group")]
         public string Group { get; set; }
+
+        [DataMember(Name = "languageId")]
+        public int? LanguageId { get; set; }
+
+        [DataMember(Name = "tag")]
+        public string Tag { get; set; }
 
         [DataMember(Name = "tagSelected")]
         public bool TagSelected { get; set; }

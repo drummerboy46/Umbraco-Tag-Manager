@@ -1,0 +1,17 @@
+﻿<div ng-controller="tagManager.delete.controller as vm">
+    <umb-editor-view>
+        <umb-dialog-body class="form-horizontal">
+            <umb-box>
+                <umb-box-content>
+                    Are you sure you want to delete this tag: <strong>{{cmsTags.tag}}</strong> ?
+                </umb-box-content>
+            </umb-box>
+        </umb-dialog-body>
+        <umb-editor-footer>
+            <umb-editor-footer-content-right>
+                <umb-button action="cancel()" type="link" button-style="link" label="Cancel"></umb-button>
+                <umb-button action="delete(cmsTags)" icon="icon-delete" button-style="danger" label="Delete"></umb-button>
+            </umb-editor-footer-content-right>
+        </umb-editor-footer>
+    </umb-editor-view>
+</div>

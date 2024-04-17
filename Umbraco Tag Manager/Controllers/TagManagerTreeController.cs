@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Our.Umbraco.Community.TagManager.Models;
 using Our.Umbraco.Community.TagManager.Repositories;
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Events;
+using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.Trees;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Trees;
@@ -21,14 +24,17 @@ namespace Our.Umbraco.Community.TagManager.Controllers
     {
         private readonly IMenuItemCollectionFactory _menuItemCollectionFactory;
         private readonly ITagManagerRepository _tagManagerRepository;
+        private readonly ILocalizationService _localizationService;
 
         public TagManagerTreeController(ILocalizedTextService localizedTextService,
             UmbracoApiControllerTypeCollection umbracoApiControllerTypeCollection,
             IEventAggregator eventAggregator,
             ITagManagerRepository tagManagerRepository,
-            IMenuItemCollectionFactory menuItemCollectionFactory) : base(localizedTextService, umbracoApiControllerTypeCollection, eventAggregator)
+            IMenuItemCollectionFactory menuItemCollectionFactory,
+            ILocalizationService localizationService) : base(localizedTextService, umbracoApiControllerTypeCollection, eventAggregator)
         {
             _tagManagerRepository = tagManagerRepository;
+            _localizationService = localizationService;
             _menuItemCollectionFactory = menuItemCollectionFactory ?? throw new ArgumentNullException(nameof(menuItemCollectionFactory));
         }
 
@@ -50,11 +56,14 @@ namespace Our.Umbraco.Community.TagManager.Controllers
             {
                 var group = id.Substring(id.IndexOf('-') + 1);
                 TagList cmsTags = _tagManagerRepository.GetTagsByGroup(group);
+                IEnumerable<ILanguage> languages = _localizationService.GetAllLanguages().ToList();
 
                 //List all tags under group
                 foreach (var tag in cmsTags.TagsInGroup)
                 {
-                    var item = CreateTreeNode(tag.Id.ToString(), group, queryStrings, $"{tag.Tag}", "icon-tag", false);
+
+                    string isoCode = tag.LanguageId != null ? languages.Where(x => x.Id == tag.LanguageId).Select(x => x.CultureName).FirstOrDefault() : "Invariant";
+                    var item = CreateTreeNode(tag.Id.ToString(), group, queryStrings, $"{tag.Tag} - {isoCode}", "icon-tag", false);
                     nodes.Add(item);
                 }
             }

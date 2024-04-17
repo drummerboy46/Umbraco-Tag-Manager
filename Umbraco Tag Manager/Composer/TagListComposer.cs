@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Examine;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -9,6 +10,7 @@ using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Events;
 using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.ContentEditing;
 using Umbraco.Cms.Core.Notifications;
 using Umbraco.Cms.Core.Persistence.Repositories;
 using Umbraco.Cms.Core.Services;
@@ -30,14 +32,17 @@ public class UpdateContentTagsForRelationsAndIndex : INotificationHandler<Conten
     private readonly IDataTypeService _dataTypeService;
     private readonly ITagRepository _tagRepository;
     private readonly IExamineManager _examineManager;
+    private readonly ILocalizationService _localizationService;
 
     public UpdateContentTagsForRelationsAndIndex(IDataTypeService dataTypeService,
         ITagRepository tagRepository,
-        IExamineManager examineManager)
+        IExamineManager examineManager,
+        ILocalizationService localizationService)
     {
         _dataTypeService = dataTypeService;
         _tagRepository = tagRepository;
         _examineManager = examineManager;
+        _localizationService = localizationService;
     }
 
     public void Handle(ContentSavingNotification notification)
@@ -61,31 +66,50 @@ public class UpdateContentTagsForRelationsAndIndex : INotificationHandler<Conten
                 // check for internal index and add data
                 bool internalIndexAvailable = _examineManager.TryGetIndex(UmbracoIndexes.InternalIndexName, out IIndex internalIndex);
 
-                if (property.GetValue() != null)
-                {
-                    // get property tag data from content, preValues (group) from datatype
-                    string[] items = JsonConvert.DeserializeObject<string[]>((string)property.GetValue()!);
-                    IDataType dataType = _dataTypeService.GetDataType(property.PropertyType.DataTypeId);
-                    Dictionary<string, object> preValues = (Dictionary<string, object>)dataType!.Configuration!;
-                    string group = (string)preValues["group"];
+                IEnumerable<ITag> tags = new List<ITag>();
+                List<ITag> allTags = new List<ITag>();
+                int? languageId = null;
 
-                    // Create the tags
-                    IEnumerable<ITag> tags = items.Select(text => new Tag
+                if (property.Values.Any())
+                {
+                    foreach (IPropertyValue value in property.Values)
                     {
-                        Text = text,
-                        Group = group
-                    });
+                        // get property tag data from content, preValues (group) from datatype
+                        if (value.EditedValue != null)
+                        {
+                            string[] items = JsonConvert.DeserializeObject<string[]>((string)value.EditedValue);
+                            IDataType dataType = _dataTypeService.GetDataType(property.PropertyType.DataTypeId);
+                            Dictionary<string, object> preValues = (Dictionary<string, object>)dataType!.Configuration!;
+                            string group = (string)preValues["group"];
+
+                            IEnumerable<ILanguage> languages = _localizationService.GetAllLanguages().ToList();
+
+                            if (value.Culture != null)
+                                languageId = languages.Count() > 1 ? languages.FirstOrDefault(x => x.IsoCode.ToLower() == value.Culture)!.Id : null;
+
+                            // Create the tags
+                            tags = items.Select(text => new Tag
+                            {
+                                Text = text,
+                                LanguageId = languageId,
+                                Group = group
+                            }).ToList();
+
+                            allTags.AddRange(tags);
+
+                            if (externalIndexAvailable)
+                                externalIndex.TransformingIndexValues += (sender, e) => AddData(sender, e, property.Alias, string.Join(",", items));
+
+                            if (internalIndexAvailable)
+                                internalIndex.TransformingIndexValues += (sender, e) => AddData(sender, e, property.Alias, string.Join(",", items));
+                        }
+                    }
 
                     // Wow, I found an API that actually works adding to the Tags table without having to revert to raw SQL - BUT IT DOESN'T UPDATE THE INDEX, So we'll have to do that separately :-(
                     _tagRepository.RemoveAll(item.Id, property.PropertyTypeId);
-                    _tagRepository.Assign(item.Id, property.PropertyTypeId, tags, false);
+                    if (allTags.Any())
+                        _tagRepository.Assign(item.Id, property.PropertyTypeId, allTags, false);
                     // Need to make a suggestion this API includes getAllTags (with unused tags) and Remove/RemoveAll/Assign updates the index.
-
-                    if (externalIndexAvailable)
-                        externalIndex.TransformingIndexValues += (sender, e) => AddData(sender, e, property.Alias, string.Join(",", items));
-
-                    if (internalIndexAvailable)
-                        internalIndex.TransformingIndexValues += (sender, e) => AddData(sender, e, property.Alias, string.Join(",", items));
                 }
                 else
                 {

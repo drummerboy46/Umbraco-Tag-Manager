@@ -2,6 +2,6 @@
 {
     public interface ITagListRepository
     {
-        string[] GetTagsByGroup(string group);
+        string[] GetTagsByGroup(string group, string culture);
     }
 }
