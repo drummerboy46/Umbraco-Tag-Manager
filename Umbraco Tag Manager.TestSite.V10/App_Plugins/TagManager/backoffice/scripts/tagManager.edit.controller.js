@@ -103,7 +103,7 @@
                 multiple: false,
             },
             mergeTag: [],
-            view: "/App_Plugins/tagManager/backoffice/propertyEditor/dropdownFlexible.html"
+            view: "/App_Plugins/TagManager/backoffice/propertyEditor/dropdownFlexible.html"
         };
 
         getPagedContent($routeParams.id, 0, vm.recordsPerPageContent);
